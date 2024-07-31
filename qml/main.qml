@@ -1,18 +1,30 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
 
 Window {
     visible: true
-    width: 640
-    height: 480
+    width: 210
+    height: 800
     title: qsTr("Hello World")
 
-    ListEntry {
-        anchors.centerIn: parent
-        cryptoName: "BTC"
-        cryptoPrice: 67589.19
-        val_1h: 5
-        val_24h: 8
-        imagePath: "qrc:/images/btc.jpeg"
+    ScrollView {
+        width: parent.width
+        height: parent.height
+
+        ListView {
+            width: parent.width
+            height: parent.height
+            model: dataEntryModel
+
+            delegate: ListEntry {
+                cryptoName: model.cryptoName
+                cryptoPrice: model.cryptoPrice
+                val_1h: model.val1h
+                val_24h: model.val24h
+                imagePath: model.imagePath
+            }
+            spacing: 10
+        }
     }
 }

@@ -1,5 +1,6 @@
 qt_add_executable(hello_world
     main.cpp
+    DataEntryModel.cpp
     ../qml/qml.qrc
 )
 

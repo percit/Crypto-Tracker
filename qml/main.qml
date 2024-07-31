@@ -7,16 +7,12 @@ Window {
     height: 480
     title: qsTr("Hello World")
 
-    Rectangle {
-        width: 100
-        height: 100
-        color: "red"
+    ListEntry {
         anchors.centerIn: parent
-
-        Text {
-            anchors.centerIn: parent
-            font.pixelSize: 15
-            text: "Hello World!"
-        }
+        cryptoName: "BTC"
+        cryptoPrice: 67589.19
+        val_1h: 5
+        val_24h: 8
+        imagePath: "qrc:/images/btc.jpeg"
     }
 }

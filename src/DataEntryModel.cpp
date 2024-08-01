@@ -16,6 +16,13 @@ void DataEntryModel::addEntry(const DataEntry &entry)
     endInsertRows();
 }
 
+void DataEntryModel::updateEntries(const QList<DataEntry> &entries)
+{
+    beginResetModel();
+    m_data = entries;
+    endResetModel();
+}
+
 int DataEntryModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())

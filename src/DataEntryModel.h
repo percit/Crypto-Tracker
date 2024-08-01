@@ -20,7 +20,8 @@ public:
         int val_24h;
         QVariant imagePath;
     };
-
+    
+    void updateEntries(const QList<DataEntry> &entries);
     void addEntry(const DataEntry &entry);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

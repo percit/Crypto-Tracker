@@ -4,7 +4,7 @@ FROM os AS install_qt
 
 ARG INSTALL_DIR=/root
 ARG WORKSPACE_DIR=/workspace
-ARG QT_VER=6.4.3
+ARG QT_VER=6.5.2
 ARG QT_ARCH=gcc_64
 ARG QT_MODULES=""
 ARG USER_ID=1000
@@ -16,7 +16,7 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install cmake \
     mesa-common-dev libxkbcommon-dev libvulkan-dev libegl-dev \
     libxcb-icccm4 libxcb-image0 libxcb-keysyms1-dev libxcb-render-util0 libxcb-shape0 \
     gcc-12 clang-format clang-tidy python3-pip -yq libgtest-dev libgmock-dev g++-12 libstdc++-12-dev \
-    ninja-build
+    ninja-build libxcb-xinerama0 libxcb-cursor0
 RUN pip install -U pip; \
     pip install -U aqtinstall
 

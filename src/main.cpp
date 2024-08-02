@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "DataEntryModel.h"
+#include <QThread>
 #include "CryptoApiManager.h"
 
 int main(int argc, char *argv[])
@@ -12,16 +13,23 @@ int main(int argc, char *argv[])
 
 
     DataEntryModel model;
-    // model.addEntry({"Bitcoin", 67589.19, 5, 8, QVariant::fromValue(QStringLiteral("images/btc.jpeg"))});
-    // model.addEntry({"Ethereum", 4289.22, -2, 3, QVariant::fromValue(QStringLiteral("path/to/ethereum.png"))});
-    // model.addEntry({"Bitcoin", 67589.19, 5, 8, QVariant::fromValue(QStringLiteral("images/btc.jpeg"))});
-    // model.addEntry({"Ethereum", 4289.22, -2, 3, QVariant::fromValue(QStringLiteral("path/to/ethereum.png"))});
-    // model.addEntry({"Bitcoin", 67589.19, 5, 8, QVariant::fromValue(QStringLiteral("images/btc.jpeg"))});
-    // model.addEntry({"Ethereum", 4289.22, -2, 3, QVariant::fromValue(QStringLiteral("path/to/ethereum.png"))});
-    // model.addEntry({"Bitcoin", 67589.19, 5, 8, QVariant::fromValue(QStringLiteral("images/btc.jpeg"))});
-    // model.addEntry({"Ethereum", 4289.22, -2, 3, QVariant::fromValue(QStringLiteral("path/to/ethereum.png"))});
-    // model.addEntry({"Bitcoin", 67589.19, 5, 8, QVariant::fromValue(QStringLiteral("images/btc.jpeg"))});
-    // model.addEntry({"Ethereum", 4289.22, -2, 3, QVariant::fromValue(QStringLiteral("path/to/ethereum.png"))});
+    CryptoApiManager *cryptoApiManager = new CryptoApiManager(&model);
+    QThread *apiThread = new QThread();
+
+    cryptoApiManager->moveToThread(apiThread);
+
+    QObject::connect(apiThread, &QThread::started, cryptoApiManager, &CryptoApiManager::fetchData);
+    QObject::connect(cryptoApiManager, &CryptoApiManager::dataFetched, [&model](const QList<DataEntryModel::DataEntry> &entries) {
+        model.updateEntries(entries);
+    });
+    QObject::connect(cryptoApiManager, &CryptoApiManager::errorOccurred, [](const QString &errorString) {
+        qWarning() << "Error occurred:" << errorString;
+    });
+    QObject::connect(apiThread, &QThread::finished, cryptoApiManager, &QObject::deleteLater);
+    QObject::connect(apiThread, &QThread::finished, apiThread, &QObject::deleteLater);
+
+    apiThread->start();
+
 
     QQmlApplicationEngine engine;
 
@@ -35,7 +43,6 @@ int main(int argc, char *argv[])
         },
         Qt::QueuedConnection);
     engine.load(url);
-    CryptoApiManager apiManager(&model);
 
     return app.exec();
 }

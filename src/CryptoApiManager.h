@@ -13,9 +13,15 @@ class CryptoApiManager : public QObject
 public:
     explicit CryptoApiManager(DataEntryModel *model, QObject *parent = nullptr);
 
+public slots:
+    void fetchData();
+
+signals:
+    void dataFetched(const QList<DataEntryModel::DataEntry> &entries);
+    void errorOccurred(const QString &errorString);
+
 private slots:
     void onDataFetched(QNetworkReply *reply);
-    void fetchData();
 
 private:
     QNetworkAccessManager *m_networkManager;

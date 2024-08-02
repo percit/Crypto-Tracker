@@ -38,6 +38,9 @@ public:
         MarketCapRankRole
     };
     Q_ENUMS(Roles)
+
+signals:
+    void dataUpdated();
 private:
     QList<DataEntry> m_data;
     QHash<int, Qt::SortOrder> m_sortOrders;

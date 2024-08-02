@@ -9,6 +9,31 @@ Window {
     height: 1050
     title: qsTr("Hello World")
 
+    Rectangle {
+        id: mainRect
+        width: parent.width
+        height: parent.height
+        color: "white"
+
+        ColorAnimation {
+            id: colorAnimation
+            target: mainRect
+            property: "color"
+            duration: 500
+            from: "white"
+            to: "blue"
+            onStopped: {
+                mainRect.color = "white"
+            }
+        }
+    }
+
+    Connections {
+        target: dataEntryModel
+        onDataUpdated: {
+            colorAnimation.start();
+        }
+    }
     Column {
         id: buttonColumn
         anchors{

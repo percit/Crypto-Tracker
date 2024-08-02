@@ -21,6 +21,7 @@ void DataEntryModel::updateEntries(const QList<DataEntry> &entries)
     beginResetModel();
     m_data = entries;
     endResetModel();
+    emit dataUpdated(); //for chaging color
 }
 
 void DataEntryModel::sortEntries(int role, Qt::SortOrder order)

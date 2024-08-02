@@ -10,7 +10,7 @@ CryptoApiManager::CryptoApiManager(DataEntryModel *model, QObject *parent)
             this, &CryptoApiManager::onDataFetched);
     connect(&m_timer, &QTimer::timeout, this, &CryptoApiManager::fetchData);
 
-    m_timer.start(3000);
+    m_timer.start(20000); //3000 is 3 seconds, but free api allows limit up to 5 calls a minute
 }
 
 void CryptoApiManager::fetchData()

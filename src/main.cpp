@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("dataEntryModel", &model);
+    qmlRegisterType<DataEntryModel>("DataEntryModel", 1, 0, "DataEntryModel"); //to run sort functions
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,

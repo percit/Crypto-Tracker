@@ -23,6 +23,39 @@ void DataEntryModel::updateEntries(const QList<DataEntry> &entries)
     endResetModel();
 }
 
+void DataEntryModel::sortEntries(int role, Qt::SortOrder order)
+{
+    auto compare = [role, order](const DataEntry &a, const DataEntry &b) -> bool {
+        switch (role) {
+            case CryptoNameRole:
+                return order == Qt::AscendingOrder ? a.cryptoName < b.cryptoName : a.cryptoName > b.cryptoName;
+            case CryptoPriceRole:
+                return order == Qt::AscendingOrder ? a.cryptoPrice < b.cryptoPrice : a.cryptoPrice > b.cryptoPrice;
+            case MarketCapRankRole:
+                return order == Qt::AscendingOrder ? a.marketCapRank < b.marketCapRank : a.marketCapRank > b.marketCapRank;
+            case Val24hRole:
+                return order == Qt::AscendingOrder ? a.val_24h < b.val_24h : a.val_24h > b.val_24h;
+            default:
+                return false;
+        }
+    };
+    std::sort(m_data.begin(), m_data.end(), compare);
+
+    emit dataChanged(index(0), index(rowCount() - 1));
+}
+
+void DataEntryModel::toggleSort(int role)
+{
+    if (!m_sortOrders.contains(role)) {
+        m_sortOrders[role] = Qt::AscendingOrder;
+    }
+
+    Qt::SortOrder currentOrder = m_sortOrders[role];
+    Qt::SortOrder newOrder = (currentOrder == Qt::AscendingOrder) ? Qt::DescendingOrder : Qt::AscendingOrder;
+    sortEntries(role, newOrder);
+    m_sortOrders[role] = newOrder;
+}
+
 int DataEntryModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -41,16 +74,18 @@ QVariant DataEntryModel::data(const QModelIndex &index, int role) const
     switch (role) {
         case Qt::DisplayRole:
             return entry.cryptoName;
-        case Qt::UserRole:
+        case CryptoNameRole:
             return entry.cryptoName;
-        case Qt::UserRole + 1:
+        case CryptoPriceRole:
             return entry.cryptoPrice;
-        case Qt::UserRole + 2:
+        case Val1hRole:
             return entry.val_1h;
-        case Qt::UserRole + 3:
+        case Val24hRole:
             return entry.val_24h;
-        case Qt::UserRole + 4:
+        case ImagePathRole:
             return entry.imagePath;
+        case MarketCapRankRole:
+            return entry.marketCapRank;
         default:
             return QVariant();
     }
@@ -59,10 +94,11 @@ QVariant DataEntryModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> DataEntryModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[Qt::UserRole] = "cryptoName";
-    roles[Qt::UserRole + 1] = "cryptoPrice";
-    roles[Qt::UserRole + 2] = "val1h";
-    roles[Qt::UserRole + 3] = "val24h";
-    roles[Qt::UserRole + 4] = "imagePath";
+    roles[CryptoNameRole] = "cryptoName";
+    roles[CryptoPriceRole] = "cryptoPrice";
+    roles[Val1hRole] = "val1h";
+    roles[Val24hRole] = "val24h";
+    roles[ImagePathRole] = "imagePath";
+    roles[MarketCapRankRole] = "marketCapRank";
     return roles;
 }

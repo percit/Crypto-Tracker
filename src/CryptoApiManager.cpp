@@ -37,6 +37,7 @@ void CryptoApiManager::onDataFetched(QNetworkReply *reply)
             entry.val_1h = obj["price_change_percentage_1h_in_currency"].toInt();
             entry.val_24h = obj["price_change_percentage_24h_in_currency"].toInt();
             entry.imagePath = obj["image"].toString();
+            entry.marketCapRank = obj["market_cap_rank"].toInt();
             entries.append(entry);
         }
 

@@ -15,6 +15,7 @@ CryptoApiManager::CryptoApiManager(DataEntryModel *model, QObject *parent)
 
 void CryptoApiManager::fetchData()
 {
+    emit requestStarted();
     QUrl url(apiUrl);
     QNetworkRequest request(url);
     m_networkManager->get(request);

@@ -17,6 +17,7 @@ public slots:
     void fetchData();
 
 signals:
+    void requestStarted();
     void dataFetched(const QList<DataEntryModel::DataEntry> &entries);
     void errorOccurred(const QString &errorString);
 

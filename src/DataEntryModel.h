@@ -41,6 +41,7 @@ public:
 
 signals:
     void dataUpdated();
+    void requestStarted();
 private:
     QList<DataEntry> m_data;
     QHash<int, Qt::SortOrder> m_sortOrders;

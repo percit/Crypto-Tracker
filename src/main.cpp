@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
     QObject::connect(apiThread, &QThread::finished, cryptoApiManager, &QObject::deleteLater);
     QObject::connect(apiThread, &QThread::finished, apiThread, &QObject::deleteLater);
 
+    QObject::connect(cryptoApiManager, &CryptoApiManager::requestStarted, &model, &DataEntryModel::requestStarted);
+
     apiThread->start();
 
 

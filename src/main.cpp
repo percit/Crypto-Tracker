@@ -22,9 +22,7 @@ int main(int argc, char *argv[])
     QObject::connect(cryptoApiManager, &CryptoApiManager::dataFetched, [&model](const QList<DataEntryModel::DataEntry> &entries) {
         model.updateEntries(entries);
     });
-    QObject::connect(cryptoApiManager, &CryptoApiManager::errorOccurred, [](const QString &errorString) {
-        qWarning() << "Error occurred:" << errorString;
-    });
+    QObject::connect(cryptoApiManager, &CryptoApiManager::errorOccurred, &model, &DataEntryModel::errorOccurred);
     QObject::connect(apiThread, &QThread::finished, cryptoApiManager, &QObject::deleteLater);
     QObject::connect(apiThread, &QThread::finished, apiThread, &QObject::deleteLater);
 

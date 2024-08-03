@@ -37,6 +37,9 @@ Window {
         onRequestStarted: {
             updateInfo.text = "Requesting data..."
         }
+        onErrorOccurred: {
+            updateInfo.text = "Error: " + errorString + ". Stale data."
+        }
     }
 
     ScrollView {
@@ -61,7 +64,6 @@ Window {
     }
     Text { //here will be updates with data request, erors, stale data
         id: updateInfo 
-        text: "Data from CoinGecko API"
         font.pointSize: 10
         anchors {
             bottom: buttonColumn.top; bottomMargin: 10

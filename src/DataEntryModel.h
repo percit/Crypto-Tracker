@@ -42,6 +42,7 @@ public:
 signals:
     void dataUpdated();
     void requestStarted();
+    void errorOccurred(const QString &errorString);
 private:
     QList<DataEntry> m_data;
     QHash<int, Qt::SortOrder> m_sortOrders;

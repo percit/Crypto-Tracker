@@ -2,11 +2,39 @@
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "DataEntryModel.h"
+#include <QThread>
+#include "CryptoApiManager.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+
+    DataEntryModel model;
+    CryptoApiManager *cryptoApiManager = new CryptoApiManager(&model);
+    QThread *apiThread = new QThread();
+
+    cryptoApiManager->moveToThread(apiThread);
+
+    QObject::connect(apiThread, &QThread::started, cryptoApiManager, &CryptoApiManager::fetchData);
+    QObject::connect(cryptoApiManager, &CryptoApiManager::dataFetched, [&model](const QList<DataEntryModel::DataEntry> &entries) {
+        model.updateEntries(entries);
+    });
+    QObject::connect(cryptoApiManager, &CryptoApiManager::errorOccurred, &model, &DataEntryModel::errorOccurred);
+    QObject::connect(apiThread, &QThread::finished, cryptoApiManager, &QObject::deleteLater);
+    QObject::connect(apiThread, &QThread::finished, apiThread, &QObject::deleteLater);
+
+    QObject::connect(cryptoApiManager, &CryptoApiManager::requestStarted, &model, &DataEntryModel::requestStarted);
+
+    apiThread->start();
+
+
     QQmlApplicationEngine engine;
+
+    engine.rootContext()->setContextProperty("dataEntryModel", &model);
+    qmlRegisterType<DataEntryModel>("DataEntryModel", 1, 0, "DataEntryModel"); //to run sort functions
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,
